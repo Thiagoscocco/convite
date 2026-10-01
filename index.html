@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Link secreto muito proibido</title>
+  <style>
+    :root {
+      --bg: #edf4f1;
+      --panel: #ffffff;
+      --text: #17231f;
+      --muted: #5f6d68;
+      --green: #00bf63;
+      --green-dark: #00984f;
+      --orange: #ff6b1a;
+      --shadow: 0 18px 48px rgba(14, 38, 29, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 18% 10%, rgba(0, 191, 99, 0.14), transparent 28%),
+        radial-gradient(circle at 88% 88%, rgba(182, 205, 91, 0.28), transparent 26%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      min-height: 100%;
+    }
+
+    main {
+      margin: 0 auto;
+      max-width: 560px;
+      min-height: 100vh;
+      padding: 18px 16px 28px;
+    }
+
+    .topline {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .image-wrap {
+      background: var(--panel);
+      border: 1px solid rgba(23, 35, 31, 0.08);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+    }
+
+    img {
+      border-radius: 6px;
+      display: block;
+      max-height: 74vh;
+      object-fit: contain;
+      width: 100%;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 900;
+      min-height: 58px;
+      padding: 0 18px;
+    }
+
+    .primary {
+      background: linear-gradient(180deg, var(--green), var(--green-dark));
+      box-shadow: 0 14px 28px rgba(0, 152, 79, 0.28);
+      margin-top: 16px;
+      width: 100%;
+    }
+
+    .info-section {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .info-section.is-visible {
+      display: block;
+    }
+
+    .decision-area {
+      height: 250px;
+      margin-top: 8px;
+      position: relative;
+      width: 100%;
+    }
+
+    .accept,
+    .decline {
+      position: absolute;
+      transition: left 190ms ease, top 190ms ease, transform 130ms ease;
+      width: min(46%, 210px);
+    }
+
+    .accept {
+      background: linear-gradient(180deg, var(--green), var(--green-dark));
+      box-shadow: 0 12px 24px rgba(0, 152, 79, 0.25);
+      left: 0;
+      top: 18px;
+    }
+
+    .decline {
+      background: linear-gradient(180deg, #ff7f32, var(--orange));
+      box-shadow: 0 12px 24px rgba(255, 107, 26, 0.25);
+      left: 54%;
+      top: 18px;
+    }
+
+    .answer {
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(23, 35, 31, 0.08);
+      border-radius: 8px;
+      color: var(--text);
+      display: none;
+      font-size: 1.7rem;
+      font-weight: 900;
+      justify-content: center;
+      min-height: 76px;
+      position: absolute;
+      text-align: center;
+      top: 18px;
+      width: 100%;
+    }
+
+    .answer.is-visible {
+      display: flex;
+    }
+
+    @media (max-width: 420px) {
+      main {
+        padding: 12px 10px 22px;
+      }
+
+      .image-wrap {
+        padding: 6px;
+      }
+
+      img {
+        max-height: 72vh;
+      }
+
+      button {
+        font-size: 1rem;
+        min-height: 54px;
+        padding: 0 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topline">Link secreto muito proibido</div>
+
+    <section class="image-wrap">
+      <img src="assets/arte-principal.png" alt="Mensagem principal">
+    </section>
+
+    <button class="primary" id="more-button" type="button">Mais Informações</button>
+
+    <section class="info-section" id="info-section">
+      <div class="image-wrap">
+        <img src="assets/detalhes.png" alt="Mais informações">
+      </div>
+
+      <div class="decision-area" id="decision-area">
+        <button class="accept" id="accept-button" type="button">Aceitar</button>
+        <button class="decline" id="decline-button" type="button">Recusar</button>
+        <div class="answer" id="answer">Combinado 😎</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const moreButton = document.getElementById("more-button");
+    const infoSection = document.getElementById("info-section");
+    const acceptButton = document.getElementById("accept-button");
+    const declineButton = document.getElementById("decline-button");
+    const answer = document.getElementById("answer");
+
+    const positions = [
+      { left: 54, top: 18 },
+      { left: 6, top: 96 },
+      { left: 51, top: 150 },
+      { left: 28, top: 142 },
+      { left: 2, top: 164 },
+      { left: 48, top: 88 },
+      { left: 24, top: 70 },
+    ];
+
+    let currentPosition = 0;
+
+    function moveDeclineButton() {
+      currentPosition = (currentPosition + 1 + Math.floor(Math.random() * 3)) % positions.length;
+      const nextPosition = positions[currentPosition];
+      declineButton.style.left = `${nextPosition.left}%`;
+      declineButton.style.top = `${nextPosition.top}px`;
+    }
+
+    moreButton.addEventListener("click", () => {
+      infoSection.classList.add("is-visible");
+      moreButton.style.display = "none";
+      infoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    acceptButton.addEventListener("click", () => {
+      acceptButton.style.display = "none";
+      declineButton.style.display = "none";
+      answer.classList.add("is-visible");
+    });
+
+    declineButton.addEventListener("click", moveDeclineButton);
+    declineButton.addEventListener("mouseenter", () => {
+      if (window.matchMedia("(hover: hover)").matches) {
+        moveDeclineButton();
+      }
+    });
+  </script>
+</body>
+</html>
